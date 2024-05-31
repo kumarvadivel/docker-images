@@ -1,0 +1,22 @@
+FROM sonarsource/sonar-scanner-cli:latest
+
+# Install OpenJDK 11 using apk package manager
+RUN apk add --no-cache openjdk11
+
+# Set JAVA_HOME environment variable
+ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk
+
+# Create the sonarqube user and group
+RUN addgroup -S sonarqube && adduser -S sonarqube -G sonarqube
+
+# Create the directory for SonarQube
+RUN mkdir -p /opt/sonarqube && chown -R sonarqube:sonarqube /opt/sonarqube
+
+# Switch to the sonarqube user
+USER sonarqube
+
+# Set working directory
+WORKDIR /opt/sonarqube
+
+# Start SonarQube
+CMD ["./bin/run.sh"]
